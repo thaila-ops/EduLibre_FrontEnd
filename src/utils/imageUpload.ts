@@ -1,7 +1,8 @@
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 
-function isImageFile(file: File) {
-  return file.type.startsWith('image/');
+function isAllowedImageType(file: File) {
+  return ALLOWED_IMAGE_TYPES.includes(file.type.toLowerCase());
 }
 
 function isAllowedSize(file: File) {
@@ -17,8 +18,18 @@ function readDataUrl(file: File) {
   });
 }
 
+export function getAcceptedImageTypesLabel() {
+  return 'PNG, JPG, JPEG ou WEBP';
+}
+
+export function getAcceptedImageTypesAttribute() {
+  return '.png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp';
+}
+
 export async function imageFileToDataUrl(file: File) {
-  if (!isImageFile(file)) throw new Error('Selecione um arquivo de imagem.');
+  if (!isAllowedImageType(file)) {
+    throw new Error(`O sistema aceita apenas imagens ${getAcceptedImageTypesLabel()}.`);
+  }
   if (!isAllowedSize(file)) throw new Error('A imagem deve ter no máximo 2 MB.');
   return readDataUrl(file);
 }

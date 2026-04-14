@@ -28,12 +28,12 @@ export async function fetchUser(id: string) {
   return response.data;
 }
 
-export async function createUser(payload: { name: string; email: string; password: string; cpf: string }) {
+export async function createUser(payload: { name: string; email: string; password: string; cpf: string; dataNascimento: string }) {
   const response = await api.post<User>('/usuarios', payload);
   return response.data;
 }
 
-export async function updateUser(id: string, payload: { name: string; cpf: string; password?: string; avatarUrl?: string; bio?: string }) {
+export async function updateUser(id: string, payload: { name: string; cpf: string; dataNascimento: string; password?: string; avatarUrl?: string; bio?: string }) {
   const response = await api.put<User>(`/usuarios/${id}`, payload);
   return response.data;
 }

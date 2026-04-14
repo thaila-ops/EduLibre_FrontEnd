@@ -6,7 +6,7 @@ import ImageUploadField from '../components/ImageUploadField';
 import PageHeader from '../components/PageHeader';
 import { useAuth } from '../contexts/AuthContext';
 import { fetchMe, updateUser } from '../services/http';
-import { getErrorMessage, validateCpf, validatePassword } from '../utils/validation';
+import { getErrorMessage, isAdult, validateBirthDate, validateCpf, validatePassword } from '../utils/validation';
 
 function UserFormPage() {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ function UserFormPage() {
     name: '',
     email: '',
     cpf: '',
+    dataNascimento: '',
     avatarUrl: '',
     bio: '',
     password: '',
@@ -29,6 +30,7 @@ function UserFormPage() {
         name: currentUser.name,
         email: currentUser.email,
         cpf: currentUser.cpf,
+        dataNascimento: currentUser.dataNascimento ?? '',
         avatarUrl: currentUser.avatarUrl ?? '',
         bio: currentUser.bio ?? '',
       }));
@@ -43,15 +45,19 @@ function UserFormPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!validateCpf(form.cpf)) return setError('Informe um CPF com 11 dígitos.');
+    if (!validateBirthDate(form.dataNascimento)) return setError('Informe uma data de nascimento válida.');
+    if (!isAdult(form.dataNascimento)) return setError('Você precisa ser maior de 18 anos para comprar ou vender aulas.');
     if (form.password && !validatePassword(form.password)) {
       return setError('Use uma senha com pelo menos 8 caracteres, letra, número e símbolo.');
     }
     if (form.password !== form.confirmPassword) return setError('A confirmação de senha não confere.');
+
     try {
       if (!user) return;
       await updateUser(String(user.id), {
         name: form.name,
         cpf: form.cpf,
+        dataNascimento: form.dataNascimento,
         avatarUrl: form.avatarUrl,
         bio: form.bio,
         password: form.password || undefined,
@@ -65,12 +71,13 @@ function UserFormPage() {
 
   return (
     <main className="marketing-shell">
-      <PageHeader title="Editar perfil" description="Atualize sua foto, bio e senha quando quiser." />
+      <PageHeader title="Editar perfil" description="Atualize sua foto, bio, data de nascimento e senha quando quiser." />
       <form className="form-card" onSubmit={handleSubmit}>
         <div className="form-grid">
           <FormField label="Nome" name="name" value={form.name} onChange={(value) => setField('name', value)} />
           <FormField label="E-mail" name="email" type="email" value={form.email} onChange={(value) => setField('email', value)} />
           <FormField label="CPF" name="cpf" value={form.cpf} onChange={(value) => setField('cpf', value)} />
+          <FormField label="Data de nascimento" name="dataNascimento" type="date" value={form.dataNascimento} onChange={(value) => setField('dataNascimento', value)} />
           <ImageUploadField
             label="Foto de perfil"
             name="avatarUrl"

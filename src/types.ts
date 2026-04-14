@@ -5,6 +5,7 @@ export type User = {
   name: string;
   email: string;
   cpf: string;
+  dataNascimento: string | null;
   tipo: UserRole;
   avatarUrl: string | null;
   bio: string | null;

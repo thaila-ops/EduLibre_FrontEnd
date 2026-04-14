@@ -2,6 +2,10 @@ export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const CPF_REGEX = /^\d{11}$/;
 export const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
+function parseDateOnly(value: string) {
+  return new Date(`${value}T00:00:00`);
+}
+
 export function validateEmail(email: string) {
   return EMAIL_REGEX.test(email.trim());
 }
@@ -12,6 +16,26 @@ export function validateCpf(cpf: string) {
 
 export function validatePassword(password: string) {
   return PASSWORD_REGEX.test(password.trim());
+}
+
+export function validateBirthDate(value: string) {
+  if (!value.trim()) return false;
+  const date = parseDateOnly(value);
+  return !Number.isNaN(date.getTime()) && date <= new Date();
+}
+
+export function isAdult(value: string, minimumAge = 18) {
+  const date = parseDateOnly(value);
+  if (Number.isNaN(date.getTime())) return false;
+
+  const today = new Date();
+  let age = today.getFullYear() - date.getFullYear();
+  const hasNotHadBirthdayYet =
+    today.getMonth() < date.getMonth()
+    || (today.getMonth() === date.getMonth() && today.getDate() < date.getDate());
+
+  if (hasNotHadBirthdayYet) age -= 1;
+  return age >= minimumAge;
 }
 
 export function getErrorMessage(error: unknown) {
