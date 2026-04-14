@@ -25,6 +25,18 @@ function BookingDetailPage() {
     }
   }
 
+  function getRequestStatusLabel(status?: Booking['bookingStatus']) {
+    if (status === 'aceito') return 'Aprovado';
+    if (status === 'recusado') return 'Negado';
+    return 'Aguardando';
+  }
+
+  function getRequestStatusClass(status?: Booking['bookingStatus']) {
+    if (status === 'aceito') return 'status-pill status-approved';
+    if (status === 'recusado') return 'status-pill status-rejected';
+    return 'status-pill status-pending';
+  }
+
   if (!booking) return <main className="marketing-shell"><div className="center-card">Carregando agendamento...</div></main>;
 
   return (
@@ -35,9 +47,22 @@ function BookingDetailPage() {
         <p className="muted">Professor: {booking.aula?.professor?.name}</p>
         <p className="muted">Aluno: {booking.aluno?.name}</p>
         <p className="muted">Data: {new Date(booking.data).toLocaleString('pt-BR')}</p>
+        <p><strong>Status da solicitação:</strong> <span className={getRequestStatusClass(booking.bookingStatus)}>{getRequestStatusLabel(booking.bookingStatus)}</span></p>
         <p><strong>Status do pagamento:</strong> {booking.paymentStatus}</p>
         <div className="hero-actions">
-          <button className="primary-button" onClick={handlePay} disabled={booking.paymentStatus === 'pago'}>Pagamento de teste</button>
+          <button
+            className="primary-button"
+            onClick={handlePay}
+            disabled={booking.paymentStatus === 'pago' || booking.bookingStatus !== 'aceito'}
+          >
+            {booking.paymentStatus === 'pago'
+              ? 'Pago'
+              : booking.bookingStatus === 'aceito'
+                ? 'Pagamento de teste'
+                : booking.bookingStatus === 'recusado'
+                  ? 'Recusado pelo professor'
+                  : 'Aguardando aceite do professor'}
+          </button>
           <Link className="secondary-button" to="/agendamentos">Voltar</Link>
         </div>
       </section>

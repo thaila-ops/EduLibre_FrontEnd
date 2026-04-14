@@ -18,12 +18,14 @@ function LessonFormPage() {
 
   useEffect(() => {
     if (!id) return;
-    fetchLesson(id).then((lesson) => setForm({
-      materia: lesson.materia,
-      valor: String(lesson.valor),
-      descricao: lesson.descricao ?? '',
-      imageUrl: lesson.imageUrl ?? '',
-    }));
+    fetchLesson(id)
+      .then((lesson) => setForm({
+        materia: lesson.materia,
+        valor: String(lesson.valor),
+        descricao: lesson.descricao ?? '',
+        imageUrl: lesson.imageUrl ?? '',
+      }))
+      .catch((requestError) => setError(getErrorMessage(requestError)));
   }, [id]);
 
   function setField(field: string, value: string) {

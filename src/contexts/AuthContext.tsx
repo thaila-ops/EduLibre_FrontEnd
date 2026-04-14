@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { fetchMe, loginRequest } from '../services/http';
 import { clearSession, getStoredToken, getStoredUser, saveSession } from '../services/storage';
 import { User } from '../types';
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
-  const value = useMemo(() => ({ user, token, loading, login, logout, refreshUser }), [loading, token, user]);
+  const value = { user, token, loading, login, logout, refreshUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

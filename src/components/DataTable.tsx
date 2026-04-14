@@ -1,9 +1,10 @@
+import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
 type Column<T> = {
   key: string;
   label: string;
-  render: (item: T) => string | number;
+  render: (item: T) => ReactNode;
 };
 
 type Props<T extends { id: number }> = {

@@ -15,6 +15,8 @@ import ProfilePage from './pages/ProfilePage';
 import SignupPage from './pages/SignupPage';
 import UserFormPage from './pages/UserFormPage';
 import LessonFormPage from './pages/LessonFormPage';
+import LessonStudentsPage from './pages/LessonStudentsPage';
+import ReceivedBookingsPage from './pages/ReceivedBookingsPage';
 
 function App() {
   return (
@@ -35,6 +37,14 @@ function App() {
           }
         />
         <Route
+          path="/agendamentos-recebidos"
+          element={
+            <ProtectedRoute>
+              <ReceivedBookingsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/agendamentos/:id"
           element={
             <ProtectedRoute>
@@ -44,6 +54,14 @@ function App() {
         />
         <Route
           path="/agendar-aula/:id"
+          element={
+            <ProtectedRoute>
+              <BookingFormPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/agendamentos/:id/editar"
           element={
             <ProtectedRoute>
               <BookingFormPage />
@@ -71,6 +89,14 @@ function App() {
           element={
             <ProtectedRoute>
               <LessonsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/minhas-aulas/:id/alunos"
+          element={
+            <ProtectedRoute>
+              <LessonStudentsPage />
             </ProtectedRoute>
           }
         />

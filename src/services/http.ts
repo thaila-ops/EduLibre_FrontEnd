@@ -6,6 +6,7 @@ type PaginationParams = {
   pageSize?: number;
   professorId?: number;
   alunoId?: number;
+  aulaId?: number;
 };
 
 export async function loginRequest(email: string, password: string) {
@@ -93,6 +94,16 @@ export async function updateBooking(id: string, payload: { alunoId: number; aula
 
 export async function payBooking(id: number) {
   const response = await api.patch<Booking>(`/agendamentos/${id}/pagar`);
+  return response.data;
+}
+
+export async function acceptBooking(id: number) {
+  const response = await api.patch<Booking>(`/agendamentos/${id}/aceitar`);
+  return response.data;
+}
+
+export async function rejectBooking(id: number) {
+  const response = await api.patch<Booking>(`/agendamentos/${id}/recusar`);
   return response.data;
 }
 

@@ -78,8 +78,15 @@ function UserFormPage() {
           <FormField label="E-mail" name="email" type="email" value={form.email} onChange={(value) => setField('email', value)} />
           <FormField label="CPF" name="cpf" value={form.cpf} onChange={(value) => setField('cpf', value)} />
           <FormField label="Data de nascimento" name="dataNascimento" type="date" value={form.dataNascimento} onChange={(value) => setField('dataNascimento', value)} />
+          <FormField
+            label="URL da foto (opcional)"
+            name="avatarUrl"
+            value={form.avatarUrl}
+            onChange={(value) => setField('avatarUrl', value)}
+            placeholder="https://exemplo.com/minha-foto.jpg"
+          />
           <ImageUploadField
-            label="Foto de perfil"
+            label="Ou envie uma foto do computador"
             name="avatarUrl"
             value={form.avatarUrl}
             onChange={(value) => setField('avatarUrl', value)}
@@ -92,7 +99,7 @@ function UserFormPage() {
           <FormField label="Senha" name="password" type="password" value={form.password} onChange={(value) => setField('password', value)} />
           <FormField label="Confirmar senha" name="confirmPassword" type="password" value={form.confirmPassword} onChange={(value) => setField('confirmPassword', value)} />
         </div>
-        <p className="muted">O e-mail aparece apenas para consulta e não pode ser alterado.</p>
+        <p className="muted">O e-mail aparece apenas para consulta e não pode ser alterado. Se você usar URL e upload, o último valor informado será o salvo.</p>
         {error ? <Feedback message={error} /> : null}
         <button className="primary-button" type="submit">Salvar</button>
       </form>

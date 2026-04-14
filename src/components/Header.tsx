@@ -36,6 +36,7 @@ function Header() {
           <Link to="/">Home</Link>
           <Link to="/professores">Professores</Link>
           <Link to="/agendamentos">Agendamentos</Link>
+          {token ? <Link to="/agendamentos-recebidos">Agendamentos recebidos</Link> : null}
 
           {token ? (
             <Link to="/conta">Minha conta</Link>

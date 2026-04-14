@@ -1,19 +1,39 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Feedback from '../components/Feedback';
 import { useAuth } from '../contexts/AuthContext';
-import { fetchBookings, fetchLessons } from '../services/http';
+import { deleteLesson, fetchBookings, fetchLessons } from '../services/http';
 import { Booking, Lesson } from '../types';
+import { getErrorMessage } from '../utils/validation';
 
 function DashboardPage() {
   const { user } = useAuth();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!user) return;
-    fetchLessons({ page: 1, pageSize: 20, professorId: user.id }).then((response) => setLessons(response.data));
-    fetchBookings({ page: 1, pageSize: 20, alunoId: user.id }).then((response) => setBookings(response.data));
+
+    fetchLessons({ page: 1, pageSize: 20, professorId: user.id })
+      .then((response) => setLessons(response.data))
+      .catch((requestError) => setError(getErrorMessage(requestError)));
+
+    fetchBookings({ page: 1, pageSize: 20, alunoId: user.id })
+      .then((response) => setBookings(response.data))
+      .catch((requestError) => setError(getErrorMessage(requestError)));
   }, [user]);
+
+  async function handleDeleteLesson(lessonId: number) {
+    if (!window.confirm('Tem certeza que deseja excluir esta aula?')) return;
+
+    try {
+      await deleteLesson(lessonId);
+      setLessons((current) => current.filter((lesson) => lesson.id !== lessonId));
+    } catch (submitError) {
+      setError(getErrorMessage(submitError));
+    }
+  }
 
   const soldBookings = lessons.reduce((total, lesson) => total + (lesson.bookingCount ?? 0), 0);
   const paidBookings = lessons.reduce((total, lesson) => total + (lesson.paidBookingCount ?? 0), 0);
@@ -28,8 +48,13 @@ function DashboardPage() {
         <div className="hero-actions">
           <Link className="primary-button" to="/criar-aula">Publicar aula</Link>
           <Link className="secondary-button" to="/professores">Agendar aula</Link>
+          <Link className="secondary-button" to="/agendamentos-recebidos">Agendamentos recebidos</Link>
+          <Link className="secondary-button" to="/perfil/editar">Editar foto de perfil</Link>
+          <Link className="secondary-button" to="/perfil">Ver perfil</Link>
         </div>
       </section>
+
+      {error ? <Feedback message={error} /> : null}
 
       <section className="grid-3">
         <article className="info-card">
@@ -48,6 +73,10 @@ function DashboardPage() {
 
       <section className="teachers">
         <h2>Aulas que você vende</h2>
+        <div className="hero-actions" style={{ marginBottom: 12 }}>
+          <Link className="secondary-button" to="/minhas-aulas">Abrir Minhas aulas</Link>
+        </div>
+        {!lessons.length ? <p className="muted">Você não tem aulas à venda.</p> : null}
         <div className="teachers_grid">
           {lessons.map((lesson) => (
             <div className="teacher_card" key={lesson.id}>
@@ -55,6 +84,8 @@ function DashboardPage() {
               <h4>{lesson.materia}</h4>
               <span>{lesson.bookingCount ?? 0} agendamentos · {lesson.paidBookingCount ?? 0} pagos</span>
               <Link to={`/minhas-aulas/${lesson.id}/editar`}><button>Editar aula</button></Link>
+              <Link to={`/minhas-aulas/${lesson.id}/alunos`}><button>Ver alunos</button></Link>
+              <button onClick={() => void handleDeleteLesson(lesson.id)}>Deletar aula</button>
             </div>
           ))}
         </div>

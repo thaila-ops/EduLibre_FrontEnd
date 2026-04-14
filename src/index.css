@@ -299,6 +299,38 @@ td {
   align-items: center;
 }
 
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.status-approved {
+  background: #dff6e6;
+  color: #16582b;
+}
+
+.status-rejected {
+  background: #ffe2dc;
+  color: #7a1f00;
+}
+
+.status-pending {
+  background: #f6edda;
+  color: #7a5c12;
+}
+
+.decision-select {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #fff;
+}
+
 .pagination {
   align-items: center;
   justify-content: flex-end;

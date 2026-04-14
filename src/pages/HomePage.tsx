@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/Moca.png';
 import { fetchFeaturedLessons } from '../services/http';
 import { Lesson } from '../types';
 import './home.css';
-import { moveMessagePortToContext } from 'worker_threads';
 
 function HomePage() {
   const [featuredLessons, setFeaturedLessons] = useState<Lesson[]>([]);

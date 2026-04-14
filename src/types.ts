@@ -40,6 +40,7 @@ export type Booking = {
   alunoId: number;
   aulaId: number;
   data: string;
+  bookingStatus?: 'pendente' | 'aceito' | 'recusado';
   paymentStatus?: 'pendente' | 'pago';
   aluno?: User;
   aula?: Lesson;
